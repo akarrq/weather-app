@@ -1,10 +1,9 @@
 import React from "react";
 import { createClient } from "pexels";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 import "./App.scss";
 import Clock from "./Clock";
+import Weather from "./Weather";
 import Forecast from "./Forecast";
 
 class App extends React.Component {
@@ -28,19 +27,19 @@ class App extends React.Component {
 
   componentDidMount() {
     this.getWeatherData();
-    const weatherIntervalId = setInterval(
+    this.weatherIntervalId = setInterval(
       () => this.getWeatherData(),
       60 * 15 * 1000
     );
     this.getPicture();
     this.getDate();
-    const intervalId = setInterval(() => this.getDate(), 60 * 1000);
+    this.intervalId = setInterval(() => this.getDate(), 60 * 1000);
   }
 
-  // componentWillUnmount() {
-  //   clearInterval(weatherIntervalId);
-  //   clearInterval(intervalId);
-  // }
+  componentWillUnmount() {
+    clearInterval(this.weatherIntervalId);
+    clearInterval(this.intervalId);
+  }
 
   getPicture = () => {
     const client = createClient(
@@ -61,7 +60,7 @@ class App extends React.Component {
 
   getWeatherData = () => {
     const URL =
-      "https://api.weatherapi.com/v1/forecast.json?key=bcecae4f3c1e4448b52134701232303&q=Gdansk&days=5&aqi=no&alerts=no&lang=pl";
+      "https://api.weatherapi.com/v1/forecast.json?key=bcecae4f3c1e4448b52134701232303&q=Gdansk&days=4&aqi=no&alerts=no&lang=pl";
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
@@ -94,10 +93,12 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <picture>
-          <source src={this.state.photoMedium} media="(min-width: 600px)" />
-          <img className="background" src={this.state.photoOriginal} />
-        </picture>
+        {this.state.photoOriginal.length > 0 ? (
+          <picture>
+            <source src={this.state.photoMedium} media="(min-width: 600px)" />
+            <img className="background" src={this.state.photoOriginal} />
+          </picture>
+        ) : null}
         <main>
           <Clock
             hour={this.state.date.hour}
@@ -106,20 +107,19 @@ class App extends React.Component {
             month={this.state.date.month}
             dayDate={this.state.date.dayDate}
           />
-          <div className="board">
-            <p className="board__location">
-              {this.state.cityName}, {this.state.countryName}
-            </p>
-            <button className="board__moreBtn">
-              <FontAwesomeIcon icon={faEllipsis} />
-            </button>
-            <div className="txt">
-              <h1 className="board__temp">{this.state.temp_c}&#8451;</h1>
-              <h2 className="board__condition">{this.state.conditionTxt}</h2>
-            </div>
-            <img src={this.state.conditionIcon} className="board__img" />
-          </div>
+          <Weather
+            cityName={this.state.cityName}
+            countryName={this.state.countryName}
+            temp={this.state.temp_c}
+            conditionTxt={this.state.conditionTxt}
+            conditionIcon={this.state.conditionIcon}
+          />
         </main>
+        <aside>
+          {this.state.forecastday.length > 0 ? (
+            <Forecast forecast={this.state.forecastday} />
+          ) : null}
+        </aside>
       </>
     );
   }
