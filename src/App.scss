@@ -21,9 +21,8 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 50px 2fr;
-  width: 90vw;
   padding: 16px;
-  margin-top: 32px;
+  margin: 40px 16px;
 
   box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
   backdrop-filter: blur(33px);
