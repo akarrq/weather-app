@@ -8,6 +8,7 @@ import Forecast from "./Forecast";
 
 class App extends React.Component {
   state = {
+    inputValue: "Gdansk",
     cityName: "",
     countryName: "",
     temp_c: "",
@@ -23,6 +24,7 @@ class App extends React.Component {
       dayDate: null,
     },
     forecastDay: [],
+    isInputVisible: false,
   };
 
   componentDidMount() {
@@ -34,6 +36,10 @@ class App extends React.Component {
     this.getPicture();
     this.getDate();
     this.intervalId = setInterval(() => this.getDate(), 60 * 1000);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.inputValue !== this.state.inputValue) this.getWeatherData();
   }
 
   componentWillUnmount() {
@@ -59,8 +65,7 @@ class App extends React.Component {
   };
 
   getWeatherData = () => {
-    const URL =
-      "https://api.weatherapi.com/v1/forecast.json?key=bcecae4f3c1e4448b52134701232303&q=Gdansk&days=4&aqi=no&alerts=no&lang=pl";
+    const URL = `https://api.weatherapi.com/v1/forecast.json?key=bcecae4f3c1e4448b52134701232303&q=${this.state.inputValue}&days=4&aqi=no&alerts=no&lang=pl`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
@@ -90,6 +95,18 @@ class App extends React.Component {
     }));
   }
 
+  handleClick = () => {
+    this.setState((prevState) => ({
+      isInputVisible: !prevState.isInputVisible,
+    }));
+  };
+
+  handleInputChange = (e) => {
+    this.setState(() => ({
+      inputValue: e.target.value,
+    }));
+  };
+
   render() {
     const {
       photoMedium,
@@ -100,6 +117,8 @@ class App extends React.Component {
       conditionIcon,
       conditionTxt,
       forecastDay,
+      inputValue,
+      isInputVisible,
     } = this.state;
     const { hour, minutes, day, month, dayDate } = this.state.date;
 
@@ -125,6 +144,10 @@ class App extends React.Component {
             temp={temp_c}
             conditionTxt={conditionTxt}
             conditionIcon={conditionIcon}
+            onClick={this.handleClick}
+            onChange={this.handleInputChange}
+            value={inputValue}
+            isInputVisible={isInputVisible}
           />
         </main>
         <aside>
