@@ -22,7 +22,7 @@ class App extends React.Component {
       month: null,
       dayDate: null,
     },
-    forecastday: [],
+    forecastDay: [],
   };
 
   componentDidMount() {
@@ -71,7 +71,7 @@ class App extends React.Component {
           conditionIcon: data.current.condition.icon,
           cityName: data.location.name,
           countryName: data.location.country,
-          forecastday: data.forecast.forecastday,
+          forecastDay: data.forecast.forecastday,
         });
       })
       .catch((err) => console.log(err));
@@ -91,34 +91,44 @@ class App extends React.Component {
   }
 
   render() {
+    const {
+      photoMedium,
+      photoOriginal,
+      cityName,
+      countryName,
+      temp_c,
+      conditionIcon,
+      conditionTxt,
+      forecastDay,
+    } = this.state;
+    const { hour, minutes, day, month, dayDate } = this.state.date;
+
     return (
       <>
-        {this.state.photoOriginal.length > 0 ? (
+        {photoOriginal.length > 0 ? (
           <picture>
-            <source src={this.state.photoMedium} media="(min-width: 600px)" />
-            <img className="background" src={this.state.photoOriginal} />
+            <source src={photoMedium} media="(min-width: 600px)" />
+            <img className="background" src={photoOriginal} />
           </picture>
         ) : null}
         <main>
           <Clock
-            hour={this.state.date.hour}
-            minutes={this.state.date.minutes}
-            day={this.state.date.day}
-            month={this.state.date.month}
-            dayDate={this.state.date.dayDate}
+            hour={hour}
+            minutes={minutes}
+            day={day}
+            month={month}
+            dayDate={dayDate}
           />
           <Weather
-            cityName={this.state.cityName}
-            countryName={this.state.countryName}
-            temp={this.state.temp_c}
-            conditionTxt={this.state.conditionTxt}
-            conditionIcon={this.state.conditionIcon}
+            cityName={cityName}
+            countryName={countryName}
+            temp={temp_c}
+            conditionTxt={conditionTxt}
+            conditionIcon={conditionIcon}
           />
         </main>
         <aside>
-          {this.state.forecastday.length > 0 ? (
-            <Forecast forecast={this.state.forecastday} />
-          ) : null}
+          {forecastDay.length > 0 ? <Forecast forecast={forecastDay} /> : null}
         </aside>
       </>
     );

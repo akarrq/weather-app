@@ -27,7 +27,7 @@ const Clock = (props) => {
   return (
     <>
       <p className="hourDate__hour">
-        {props.hour}:{props.minutes}
+        {props.hour}:{props.minutes < 10 ? "0" + props.minutes : props.minutes}
       </p>
       <p className="hourDate__date">
         {days[props.day]} | {months[props.month]} {props.dayDate}
