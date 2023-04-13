@@ -1,10 +1,11 @@
 import React from "react";
-import { createClient } from "pexels";
+import { createApi } from "unsplash-js";
 
 import "./App.scss";
 import Clock from "./Clock";
 import Weather from "./Weather";
 import Forecast from "./Forecast";
+import Picture from "./Picture";
 
 class App extends React.Component {
   state = {
@@ -14,8 +15,7 @@ class App extends React.Component {
     temp_c: "",
     conditionTxt: "Sunny",
     conditionIcon: "",
-    photoOriginal: "",
-    photoMedium: "",
+    photo: {},
     date: {
       hour: null,
       minutes: null,
@@ -48,20 +48,23 @@ class App extends React.Component {
   }
 
   getPicture = () => {
-    const client = createClient(
-      "jzLNCVvA6m2FFDkN4YD3elUiv7eE7ztvm6WJbJ2wFVKLujNnLVRuZG1V"
-    );
-    const query = this.state.conditionTxt;
+    const unsplash = createApi({
+      accessKey: "mrc8ss66kbLPrLLKjLlB09tY32LiOMBFMqZlaJE05Vs",
+    });
 
-    client.photos
-      .search({ query, per_page: 1, orientation: "portrait" })
-      .then((photos) =>
-        this.setState({
-          photoOriginal: photos.photos[0].src.original,
-          photoMedium: photos.photos[0].src.medium,
-        })
-      )
-      .catch((err) => console.log(err));
+    unsplash.search
+      .getPhotos({ query: "Bezchmurnie", lang: "pl", perPage: 1 })
+      .then((result) => {
+        if (result.errors) {
+          console.log("error occurred: ", result.errors[0]);
+        } else {
+          const photo = result.response;
+          console.log(photo);
+          this.setState({
+            photo,
+          });
+        }
+      });
   };
 
   getWeatherData = () => {
@@ -69,7 +72,6 @@ class App extends React.Component {
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         this.setState({
           temp_c: data.current.temp_c,
           conditionTxt: data.current.condition.text,
@@ -109,8 +111,7 @@ class App extends React.Component {
 
   render() {
     const {
-      photoMedium,
-      photoOriginal,
+      photo,
       cityName,
       countryName,
       temp_c,
@@ -124,12 +125,7 @@ class App extends React.Component {
 
     return (
       <>
-        {photoOriginal.length > 0 ? (
-          <picture>
-            <source src={photoMedium} media="(min-width: 600px)" />
-            <img className="background" src={photoOriginal} />
-          </picture>
-        ) : null}
+        <Picture photo={photo} />
         <main>
           <Clock
             hour={hour}

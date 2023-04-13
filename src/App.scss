@@ -28,11 +28,12 @@
 
   box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
   backdrop-filter: blur(33px);
+  -webkit-backdrop-filter: blur(33px);
   background-blend-mode: overlay;
   border-radius: 25px;
 
   &--forecast {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr;
   }
   &__day {
