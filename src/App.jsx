@@ -13,7 +13,7 @@ class App extends React.Component {
     cityName: "",
     countryName: "",
     temp_c: "",
-    conditionTxt: "Sunny",
+    conditionTxt: "Słonecznie",
     conditionIcon: "",
     photo: { photoUrl: "" },
     date: {
@@ -40,6 +40,7 @@ class App extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.inputValue !== this.state.inputValue) this.getWeatherData();
+    if (prevState.conditionTxt !== this.state.conditionTxt) this.getPicture();
   }
 
   componentWillUnmount() {
@@ -52,9 +53,11 @@ class App extends React.Component {
       accessKey: "mrc8ss66kbLPrLLKjLlB09tY32LiOMBFMqZlaJE05Vs",
     });
 
+    const condition = this.state.conditionTxt;
+
     unsplash.search
       .getPhotos({
-        query: "Bezchmurnie",
+        query: condition,
         lang: "pl",
         perPage: 1,
         orientation: "landscape",
@@ -71,6 +74,7 @@ class App extends React.Component {
               photoAlt: photo.results[0].alt_description,
               author: photo.results[0].user.name,
               photoLink: photo.results[0].links.html,
+              mainColor: photo.results[0].color,
             },
           }));
         }
@@ -141,7 +145,7 @@ class App extends React.Component {
           photoLink={photoLink}
           author={author}
         />
-        <main>
+        <header>
           <Clock
             hour={hour}
             minutes={minutes}
@@ -160,10 +164,10 @@ class App extends React.Component {
             value={inputValue}
             isInputVisible={isInputVisible}
           />
-        </main>
-        <aside>
+        </header>
+        <main>
           {forecastDay.length > 0 ? <Forecast forecast={forecastDay} /> : null}
-        </aside>
+        </main>
       </>
     );
   }

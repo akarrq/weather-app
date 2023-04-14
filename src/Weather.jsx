@@ -28,7 +28,11 @@ const Weather = (props) => {
         <h1 className="board__temp">{props.temp}&#8451;</h1>
         <h2 className="board__condition">{props.conditionTxt}</h2>
       </div>
-      <img src={props.conditionIcon} className="board__img" />
+      <img
+        src={props.conditionIcon}
+        alt={props.conditionTxt}
+        className="board__img"
+      />
     </div>
   );
 };

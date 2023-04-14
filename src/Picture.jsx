@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
+
 const Picture = ({ photoAlt, photoUrl, photoLink, author }) => (
   <picture>
     <source src={photoUrl} media="(min-width: 600px)" />
@@ -8,7 +11,7 @@ const Picture = ({ photoAlt, photoUrl, photoLink, author }) => (
       target="_blank"
       rel="noopener noreferrer"
     >
-      Photo by: {author} / Unsplash
+      <FontAwesomeIcon icon={faCamera} /> {author} / Unsplash
     </a>
   </picture>
 );
