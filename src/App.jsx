@@ -15,7 +15,7 @@ class App extends React.Component {
     temp_c: "",
     conditionTxt: "Sunny",
     conditionIcon: "",
-    photo: {},
+    photo: { photoUrl: "" },
     date: {
       hour: null,
       minutes: null,
@@ -53,16 +53,26 @@ class App extends React.Component {
     });
 
     unsplash.search
-      .getPhotos({ query: "Bezchmurnie", lang: "pl", perPage: 1 })
+      .getPhotos({
+        query: "Bezchmurnie",
+        lang: "pl",
+        perPage: 1,
+        orientation: "landscape",
+      })
       .then((result) => {
         if (result.errors) {
           console.log("error occurred: ", result.errors[0]);
         } else {
           const photo = result.response;
           console.log(photo);
-          this.setState({
-            photo,
-          });
+          this.setState(() => ({
+            photo: {
+              photoUrl: photo.results[0].urls.regular,
+              photoAlt: photo.results[0].alt_description,
+              author: photo.results[0].user.name,
+              photoLink: photo.results[0].links.html,
+            },
+          }));
         }
       });
   };
@@ -111,7 +121,6 @@ class App extends React.Component {
 
   render() {
     const {
-      photo,
       cityName,
       countryName,
       temp_c,
@@ -121,11 +130,17 @@ class App extends React.Component {
       inputValue,
       isInputVisible,
     } = this.state;
+    const { photoAlt, photoUrl, photoLink, author } = this.state.photo;
     const { hour, minutes, day, month, dayDate } = this.state.date;
 
     return (
       <>
-        <Picture photo={photo} />
+        <Picture
+          photoAlt={photoAlt}
+          photoUrl={photoUrl}
+          photoLink={photoLink}
+          author={author}
+        />
         <main>
           <Clock
             hour={hour}
