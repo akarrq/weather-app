@@ -5,4 +5,5 @@ React weather app using weatherAPI and Unsplash API to loading dynamics backgrou
 - displaying current weather conditions
 - displaying the weather forecast
 ## educational purpose of the project
-learning how to use the API in a React-based application
+- learning how to use the API in a React-based application
+- learning the Vite.js environment, the NPM package manager
